@@ -25,8 +25,8 @@ def get_next_available_ip() -> str:
 
 def start(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_message.from_user.id
+    print(f"Received /start from {user_id}")  # Добавьте это для логирования
 
-    # Проверяем, является ли пользователь админом
     if user_id == ADMIN_ID:
         keyboard = [
             [
@@ -38,6 +38,7 @@ def start(update: Update, context: CallbackContext) -> None:
         update.effective_message.reply_text('Выберите действие:', reply_markup=reply_markup)
     else:
         update.effective_message.reply_text('У вас нет доступа к этому боту.')
+
 
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
