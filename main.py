@@ -1,3 +1,15 @@
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler
+import subprocess
+from io import BytesIO
+import re
+
+TOKEN = "6564742799:AAHMDMyFj3uSo3-X3M9WukvsnBWyNY9TXfU"
+ADMIN_ID = 170663702
+SERVER_PUBLIC_KEY = "Wa3s9VB7CR58nPu5eI0UQ05HhpKhAm8035QvHJKdT0Q="
+YOUR_SERVER_IP = "212.118.37.218"
+YOUR_SERVER_PORT = "51830"
+
 def get_next_available_ip() -> str:
     with open('/etc/wireguard/wg0.conf', 'r') as f:
         contents = f.read()
