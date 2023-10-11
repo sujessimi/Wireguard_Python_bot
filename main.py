@@ -19,18 +19,11 @@ def get_next_available_ip() -> str:
     last_ip = max(int(ip) for ip in all_ips)
     return f"10.0.0.{last_ip + 1}"
 
-def restricted(func):
-    """Decorator to restrict access to command to ADMIN only."""
-    def wrapped(update: Update, context: CallbackContext, *args, **kwargs):
-        user_id = update.effective_user.id
-        if user_id != ADMIN_ID:
-            print(f"Unauthorized access denied for {user_id}.")
-            return
-        return func(update, context, *args, **kwargs)
-    return wrapped
-
-@restricted
 def start(update: Update, context: CallbackContext) -> None:
+    if update.message.from_user.id != ADMIN_ID:
+        update.message.reply_text('У вас нет доступа к этому боту.')
+        return
+    
     keyboard = [
         [
             InlineKeyboardButton("Создать нового пользователя", callback_data='new_user'),
@@ -41,6 +34,9 @@ def start(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Выберите действие:', reply_markup=reply_markup)
 
 def button(update: Update, context: CallbackContext) -> None:
+    if update.callback_query.from_user.id != ADMIN_ID:
+        return
+
     query = update.callback_query
     query.answer()
 
@@ -81,3 +77,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
