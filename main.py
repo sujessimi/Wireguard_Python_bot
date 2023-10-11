@@ -20,13 +20,21 @@ def get_next_available_ip() -> str:
     return f"10.0.0.{last_ip + 1}"
 
 def restricted(func):
+    """Decorator to restrict access to command to ADMIN only."""
     def wrapped(update, context, *args, **kwargs):
-        user_id = update.effective_user.id
-        if user_id != ADMIN_ID:
+        user_id = None
+        if update.message:
+            user_id = update.message.from_user.id
+        elif update.callback_query:
+            user_id = update.callback_query.from_user.id
+        
+        if user_id and user_id != ADMIN_ID:
             print(f"Unauthorized access denied for {user_id}.")
             return
+
         return func(update, context, *args, **kwargs)
     return wrapped
+
 
 @restricted
 def start(update: Update, context: CallbackContext) -> None:
