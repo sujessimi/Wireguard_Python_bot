@@ -1,5 +1,5 @@
-from telegram import Bot, Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from telegram import Bot, Update, ReplyKeyboardButton, ReplyKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 import logging
 
 # Включим базовые логи
@@ -12,33 +12,35 @@ def start(update: Update, context):
     user_id = update.message.from_user.id
     if user_id == 170663702:
         keyboard = [
-            [InlineKeyboardButton("Создать нового клиента", callback_data='create_client')],
-            [InlineKeyboardButton("Перезагрузка сервера", callback_data='reboot_server')]
+            [ReplyKeyboardButton("Создать нового клиента")],
+            [ReplyKeyboardButton("Перезагрузка сервера")]
         ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        reply_markup = ReplyKeyboardMarkup(keyboard)
         update.message.reply_text('Выберите действие:', reply_markup=reply_markup)
     else:
         update.message.reply_text('У вас нет доступа к этим функциям.')
 
-def button(update: Update, context):
-    query = update.callback_query
-    if query.data == 'create_client':
+def handle_message(update: Update, context):
+    message_text = update.message.text
+    if message_text == "Создать нового клиента":
         # TODO: Добавьте код для создания нового клиента
-        query.edit_message_text(text="Клиент создан!")
-    elif query.data == 'reboot_server':
+        update.message.reply_text("Клиент создан!")
+    elif message_text == "Перезагрузка сервера":
         # TODO: Добавьте код для перезагрузки сервера
-        query.edit_message_text(text="Сервер перезагружается!")
+        update.message.reply_text("Сервер перезагружается!")
 
 def main():
     updater = Updater(token=TOKEN, use_context=True)
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(CallbackQueryHandler(button))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
 
     updater.start_polling()
     updater.idle()
 
 if __name__ == '__main__':
+    main()
+
     main()
 
