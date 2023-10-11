@@ -1,46 +1,40 @@
-from telegram import Bot, Update, ReplyKeyboardButton, ReplyKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 import logging
+from aiogram import Bot, Dispatcher, types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-# Включим базовые логи
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                     level=logging.INFO)
+API_TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
 
-TOKEN = '6564742799:AAHMDMyFj3uSo3-X3M9WukvsnBWyNY9TXfU'
+logging.basicConfig(level=logging.INFO)
 
-def start(update: Update, context):
-    user_id = update.message.from_user.id
+# Инициализация бота и диспетчера
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher(bot)
+
+@dp.message_handler(commands=['start'])
+async def send_welcome(message: types.Message):
+    user_id = message.from_user.id
+
     if user_id == 170663702:
-        keyboard = [
-            [ReplyKeyboardButton("Создать нового клиента")],
-            [ReplyKeyboardButton("Перезагрузка сервера")]
-        ]
-        reply_markup = ReplyKeyboardMarkup(keyboard)
-        update.message.reply_text('Выберите действие:', reply_markup=reply_markup)
+        markup = ReplyKeyboardMarkup(resize_keyboard=True)
+        item1 = KeyboardButton("Создать нового клиента")
+        item2 = KeyboardButton("Перезагрузка сервера")
+        markup.add(item1, item2)
+
+        await message.answer("Выберите действие:", reply_markup=markup)
     else:
-        update.message.reply_text('У вас нет доступа к этим функциям.')
+        await message.answer("У вас нет доступа к этим функциям.")
 
-def handle_message(update: Update, context):
-    message_text = update.message.text
-    if message_text == "Создать нового клиента":
-        # TODO: Добавьте код для создания нового клиента
-        update.message.reply_text("Клиент создан!")
-    elif message_text == "Перезагрузка сервера":
-        # TODO: Добавьте код для перезагрузки сервера
-        update.message.reply_text("Сервер перезагружается!")
+@dp.message_handler(lambda message: message.text == "Создать нового клиента")
+async def create_client(message: types.Message):
+    # TODO: Добавьте код для создания нового клиента
+    await message.answer("Клиент создан!")
 
-def main():
-    updater = Updater(token=TOKEN, use_context=True)
-    dp = updater.dispatcher
-
-    dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
-
-    updater.start_polling()
-    updater.idle()
+@dp.message_handler(lambda message: message.text == "Перезагрузка сервера")
+async def reboot_server(message: types.Message):
+    # TODO: Добавьте код для перезагрузки сервера
+    await message.answer("Сервер перезагружается!")
 
 if __name__ == '__main__':
-    main()
-
-    main()
+    from aiogram import executor
+    executor.start_polling(dp, skip_updates=True)
 
