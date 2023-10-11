@@ -1,6 +1,7 @@
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackContext, CallbackQueryHandler
 import subprocess
+import re  # Добавлен импорт для работы с регулярными выражениями
 
 TOKEN = "6564742799:AAHMDMyFj3uSo3-X3M9WukvsnBWyNY9TXfU"
 ADMIN_ID = 170663702
