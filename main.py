@@ -6,7 +6,7 @@ import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
-TOKEN = 'YOUR_TELEGRAM_BOT_TOKEN'
+TOKEN = '6564742799:AAHMDMyFj3uSo3-X3M9WukvsnBWyNY9TXfU'
 
 def start(update: Update, context):
     user_id = update.message.from_user.id
