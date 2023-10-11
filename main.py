@@ -84,8 +84,8 @@ def main():
     updater = Updater(TOKEN)
 
     dp = updater.dispatcher
-    dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CallbackQueryHandler(button))
+    dp.add_handler(CommandHandler("start", start))
 
     updater.start_polling()
     updater.idle()
