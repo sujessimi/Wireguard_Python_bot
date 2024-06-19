@@ -14,7 +14,7 @@ dp = Dispatcher(bot)
 async def send_welcome(message: types.Message):
     user_id = message.from_user.id
 
-    if user_id == 170663702:
+    if user_id == :
         markup = ReplyKeyboardMarkup(resize_keyboard=True)
         item1 = KeyboardButton("Создать нового клиента")
         item2 = KeyboardButton("Перезагрузка сервера")
